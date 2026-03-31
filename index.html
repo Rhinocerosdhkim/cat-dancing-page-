@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For My Maya</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #ffc0cb;       /* 파스텔 핑크 배경 */
+            --box-color: #8c82fc;      /* 보라색 박스 */
+            --text-color: #ffffff;
+            --accent-color: #ffeb3b;   /* 노란색 강조 */
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Press Start 2P', cursive; /* 레트로 게임 폰트 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-color);
+            overflow: hidden; /* 스크롤 방지 */
+        }
+
+        /* 게임기 같은 메인 컨테이너 */
+        .game-container {
+            width: 90%;
+            max-width: 400px;
+            background-color: var(--box-color);
+            border: 4px solid #fff;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 
+                8px 8px 0px rgba(0,0,0,0.2),
+                inset 4px 4px 0px rgba(255,255,255,0.3),
+                inset -4px -4px 0px rgba(0,0,0,0.3);
+            text-align: center;
+            position: relative;
+        }
+
+        /* 상단 장식 바 */
+        .ui-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 10px; /* 폰트 크기 줄임 */
+            opacity: 0.9;
+            letter-spacing: -1px; /* 자간 좁힘 */
+        }
+        
+        .ui-bar span {
+             white-space: nowrap; /* 줄바꿈 방지 */
+        }
+
+        /* 토끼 이미지 영역 */
+        .rabbit-zone {
+            margin: 10px auto 20px;
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .rabbit-img {
+            width: 160px; /* 이미지 크기 조절 */
+            image-rendering: pixelated; /* 픽셀이 선명하게 보이도록 설정 */
+        }
+
+        /* 텍스트 스타일 */
+        h1 {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 0px #000;
+        }
+
+        p {
+            font-size: 10px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        /* 입력창 스타일 */
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            border: 2px solid #fff;
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            text-align: center;
+            margin-bottom: 15px;
+            outline: none;
+        }
+        
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 10px;
+        }
+
+        /* 버튼 스타일 */
+        button {
+            background-color: #ff69b4;
+            color: white;
+            border: 2px solid #fff;
+            padding: 10px 20px;
+            font-family: 'Press Start 2P', cursive;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
+            transition: transform 0.1s;
+        }
+
+        button:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+        }
+
+        /* 편지 페이지 (처음엔 숨김) */
+        #letter-page {
+            display: none;
+            text-align: left;
+            height: 400px;
+            overflow-y: auto; /* 내용이 길면 스크롤 */
+            padding-right: 10px;
+        }
+
+        /* 스크롤바 커스텀 */
+        #letter-page::-webkit-scrollbar {
+            width: 8px;
+        }
+        #letter-page::-webkit-scrollbar-thumb {
+            background: #fff;
+            border-radius: 4px;
+        }
+        #letter-page::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+        }
+
+        .letter-content {
+            font-size: 10px; /* 긴 독일어 텍스트를 위해 작게 조정 */
+            line-height: 2.0;
+            white-space: pre-wrap; /* 줄바꿈 유지 */
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .highlight {
+            color: var(--accent-color);
+        }
+
+        .error-msg {
+            color: #ffeb3b;
+            font-size: 10px;
+            margin-top: 10px;
+            display: none;
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        /* 하트 효과 */
+        .heart {
+            position: absolute;
+            color: #ff69b4;
+            animation: float 2.5s linear forwards;
+            opacity: 0;
+            font-size: 24px;
+            z-index: 10;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <div class="ui-bar">
+            <span>♥ 3RD YEAR</span>
+            <span>MUNICH - COPENHAGEN</span>
+        </div>
+
+        <div id="quiz-page">
+            <div class="rabbit-zone">
+                <video class="rabbit-img" autoplay loop muted playsinline>
+    <source src="./rabbit.mp4" type="video/mp4">
+</video>
+            </div>
+
+            <h1>WILL YOU BE<br>MY VALENTINE?</h1>
+            
+            <p>Then you have to know<br>your boyfriend's name<br>in <span class="highlight">KOREAN!</span></p>
+
+            <input type="text" id="nameInput" placeholder="이름 입력 (ex: 마야)">
+            <br>
+            <button onclick="checkAnswer()">ENTER</button>
+            <p id="errorMsg" class="error-msg">Wrong name! Try again :(</p>
+        </div>
+
+        <div id="letter-page">
+            <div style="text-align: center; margin-bottom: 20px; animation: bounce 1s infinite alternate;">
+                <span style="font-size: 40px;">💌</span>
+            </div>
+            <div class="letter-content">
+Liebe Maya
+
+Heute ist schon unser dritter Valentinstag. Ich schreibe dir diesen Brief, weil ich dir meine Liebe ausdrücken möchte.
+
+Es ist schade, dass wir am Valentinstag getrennt sind, aber ich wollte dir etwas Besonderes schenken, an das du dich erinnern kannst – deshalb diese kleine Website. Ich denke oft daran, wie schön es wäre, wenn wir jetzt zusammen sein könnten.
+
+Ich möchte so viel Zeit wie möglich mit dir verbringen. Wenn du nach meinen Prüfungen nach München kommst, und bevor ich nach Korea gehe – auch wenn du Semester hast und wir vielleicht nicht den ganzen Tag zusammen sein können – freue ich mich schon riesig darauf, zumindest die Abende gemeinsam mit dir zu verbringen.
+
+Es ist irgendwie bittersüß, dass allein unser Treffen schon wie ein riesiges „Event“ wirkt, obwohl wir doch ein Paar sind, haha. Jedenfalls lerne ich jeden Tag fleißig für meine Prüfungen und halte durch, während ich sehnsüchtig auf Ende Februar und Anfang März warte, um bei dir zu sein.
+
+Manchmal habe ich das Gefühl, nicht gut genug für dich zu sein, und das tut mir leid. Aber ich verspreche dir, dass ich dich immer lieben und ein Freund sein werde, der sich noch besser um dich kümmert.
+
+Dein dich sehr liebender Donghyun.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkAnswer() {
+            const input = document.getElementById('nameInput').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+            
+            // 정답 체크 (공백 제거 후 확인)
+            if (input === '동현') {
+                // 성공 시
+                document.getElementById('quiz-page').style.display = 'none';
+                document.getElementById('letter-page').style.display = 'block';
+                createHearts();
+            } else {
+                // 실패 시
+                errorMsg.style.display = 'block';
+                document.getElementById('nameInput').value = ''; // 입력창 초기화
+                // 흔들리는 효과
+                const container = document.querySelector('.game-container');
+                container.style.animation = 'shake 0.5s';
+                setTimeout(() => { container.style.animation = ''; }, 500);
+            }
+        }
+
+        // 흔들림 애니메이션 CSS 추가
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes shake {
+                0% { transform: translateX(0); }
+                20% { transform: translateX(-10px); }
+                40% { transform: translateX(10px); }
+                60% { transform: translateX(-10px); }
+                80% { transform: translateX(10px); }
+                100% { transform: translateX(0); }
+            }
+            @keyframes bounce {
+                from { transform: translateY(0); }
+                to { transform: translateY(-10px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 하트 펑펑 효과 함수
+        function createHearts() {
+            const container = document.querySelector('.game-container');
+            for(let i=0; i<15; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    heart.innerHTML = '♥';
+                    // 랜덤 위치 및 크기
+                    heart.style.left = Math.random() * 90 + 5 + '%';
+                    heart.style.top = '80%';
+                    heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                    
+                    container.appendChild(heart);
+                    
+                    // 애니메이션 끝나면 제거
+                    setTimeout(() => heart.remove(), 2500);
+                }, i * 150);
+            }
+        }
+        
+        // 엔터키 입력 시 정답 확인
+        document.getElementById('nameInput').addEventListener('keypress', function(e) {
+            if(e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+    </script>
+</body>
+</html>
